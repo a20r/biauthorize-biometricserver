@@ -23,6 +23,10 @@ def upload_file():
     </form>
     '''
 
+@app.route('/check/<userId>', methods = ['POST'])
+def postCheck(userId):
+    pass
+
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         app.run()
