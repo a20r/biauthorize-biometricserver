@@ -26,20 +26,25 @@ def upload_file():
 
 @app.route('/check/<userId>', methods = ['POST'])
 def postCheck(userId):
-    pass
+    filename = request.files[config.imageFieldName]
 
 @app.route('/reference/<userid>', method = 'POST')
-def reference(userid):
-    filename = request.files[ config.image_fieldname ]
+def reference(userId):
+    filename = request.files[config.imageFieldName]
 
     if filename:
         try:
-            newfile = open( os.path.join(config.reference_dir, str(userid) + image_extension), "w" )
+            newfile = open(
+                os.path.join(
+                    config.referenceDir,
+                    str(userid) + imageExtension
+                ), "w"
+            )
             newfile.write()
             newfile.close()
-            return config.ok_code
+            return config.okCode
         except:
-            return config.error_code
+            return config.errorCode
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:

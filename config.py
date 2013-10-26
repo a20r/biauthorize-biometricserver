@@ -7,11 +7,11 @@ used further in the program.
 
 #------------------------------------
 #Constants for the reference function
-image_fieldname = "image"
-reference_dir = "reference/"
-image_extension = ".jpg"
+imageFieldName = "image"
+referenceDir = "reference/"
+imageExtension = ".jpg"
 
-ok_code = 200
-error_code = 500
+okCode = 200
+errorCode = 500
 
 #------------------------------------
