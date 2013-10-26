@@ -1,4 +1,5 @@
 import os
+import sys
 from flask import Flask, request, redirect, url_for
 
 app = Flask(__name__)
@@ -23,4 +24,7 @@ def upload_file():
     '''
 
 if __name__ == "__main__":
-    app.run()
+    if len(sys.argv) < 3:
+        app.run()
+    else:
+        app.run(host = sys.argv[1], port = int(sys.argv[2]))
