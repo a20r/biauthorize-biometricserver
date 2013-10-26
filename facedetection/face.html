@@ -1,0 +1,125 @@
+
+<!-- saved from url=(0077)http://aw204.host.cs.st-andrews.ac.uk/camgaze.js/examples/face_detection.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    	<meta charset="utf-8">
+    	<title>Camgaze.js</title>
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<meta name="description" content="">
+    	<meta name="author" content="">
+    	<style type="text/css">
+        	body {
+        		padding-top: 60px;
+        		padding-bottom: 40px;
+        	}
+            
+            .container-narrow {
+                margin: 0 auto;
+                max-width: 700px;
+            }
+
+            div#badge {
+                width: 141px;
+                height: 141px;
+                position: fixed;
+                top: 0;
+                right: 0;
+            }
+    	</style>
+    	<!-- Le Bootstrap styles -->
+        <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="js/html5shiv.js"></script>
+          <![endif]-->
+
+        <link type="text/css" rel="stylesheet" href="chrome-extension://cpngackimfmofbokmjmljamhdncknpmg/style.css">
+        <script type="text/javascript" charset="utf-8" src="chrome-extension://cpngackimfmofbokmjmljamhdncknpmg/page_context.js"></script>
+    <style type="text/css"></style></head>
+    <body screen_capture_injected="true" style="">
+    <div id="badge">
+        <a href="https://github.com/wallarelvo/camgaze.js/fork" style="position: absolute; z-index:2; top: 0; right: 0; border: 0;">
+            <img src="./face_files/forkme.png" alt="Fork me on GitHub">
+        </a>
+    </div>
+        <div class="container-narrow">
+            <div class="masthead">
+                <ul class="nav nav-pills pull-right">
+                    <li class="active"><a href="http://aw204.host.cs.st-andrews.ac.uk/camgaze.js">Home</a></li>
+                    <li><a href="http://github.com/wallarelvo/camgaze.js">Source</a></li>
+                </ul>
+                <h3 class="muted">Camgaze.js</h3>
+            </div>
+            <div class="hero-unit">
+            	<h2 style="padding-bottom:10;">Face Detection Demo</h2>
+                <!--<div align="center">-->
+                	<canvas id="mainCanvas" height="440" width="580"></canvas>
+                	<video style="display: none;" autoplay="" src="blob:http%3A//aw204.host.cs.st-andrews.ac.uk/5967bac2-7341-42b5-8aa8-4dbdb0575e91"></video>
+                <!--</div>-->
+            </div>
+
+            <div class="footer">
+                <p>
+                    Creator: 
+                    <a href="http://www.linkedin.com/pub/alexander-wallar/68/985/b87">
+                        Alex Wallar
+                    </a>| <a href="mailto:aw204@st-andrews.ac.uk">aw204@st-andrews.ac.uk</a>
+                </p>
+                <p>
+                    Website by: 
+                    <a href="http://www.thundersun.net/">
+                        Valentin Tunev
+                    </a>
+                </p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="./face_files/88x31.png"></a><br><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Camgaze.js</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://github.com/wallarelvo/camgaze.js" property="cc:attributionName" rel="cc:attributionURL">Alexander Wallar</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
+            </div>
+	    </div>
+		<!-- JQuery and Bootstrap Javascript files -->
+		<script src="./face_files/jquery.min.js"></script>
+
+		<!-- Concuss.js and Canvas utilities -->
+		<script text="text/javascript" src="./face_files/jsfeat.js"></script>
+		<script text="text/javascript" src="./face_files/compatibility.js"></script>
+		<script text="text/javascript" src="./face_files/camgaze.js"></script>
+        <script text="text/javascript" src="./face_files/facehandler.js"></script>
+        <script text="text/javascript" src="./face_files/frontalface.js"></script>
+		<script text="text/javascript">
+			window.onload = function () {
+				var width = 580;
+				var height = 440;
+				var cGaze = new camgaze.Camgaze(width, height, "mainCanvas");
+				var faceDetector = new camgaze.CVUtil.HaarDetector(
+					camgaze.cascades.frontalface,
+					width,
+					height
+				);
+				var drawer = new camgaze.drawing.ImageDrawer();
+
+				var frameOp = function (image_data, video) {
+					var faceRects = faceDetector.detectObjects(
+						video,
+						1.1,
+						1
+					);
+
+					faceRects.forEach(
+						function (face) {
+							image_data = drawer.drawRectangle(
+								image_data,
+								face,
+								face.width,
+								face.height,
+								3,
+								"red"
+							);
+						}
+					);
+                    faceHandler.faceHandle(faceRects);
+					return image_data;
+				};
+				cGaze.setFrameOperator(frameOp);
+			} 
+		</script>
+	
+
+
+</body></html>
