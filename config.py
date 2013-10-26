@@ -9,6 +9,7 @@ used further in the program.
 #Constants for the reference function
 imageFieldName = "image"
 referenceDir = "reference/"
+tempDir = "temp/"
 imageExtension = ".jpg"
 
 okCode = 200
