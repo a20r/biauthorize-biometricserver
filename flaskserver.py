@@ -1,6 +1,7 @@
 import os
 import sys
-from flask import Flask, request, redirect, url_for
+import config
+from flask import Flask, request, redirect, url_for, abort
 
 app = Flask(__name__)
 
@@ -22,6 +23,19 @@ def upload_file():
          <input type=submit value=Upload>
     </form>
     '''
+
+@app.route('/reference/<userid>', method = 'POST')
+def reference(userid):
+    filename = request.files[ config.image_fieldname ]
+
+    if filename:
+        try:
+            newfile = open( os.path.join(config.reference_dir, str(userid) + image_extension), "w" )
+            newfile.write()
+            newfile.close()
+            return config.ok_code
+        except:
+            return config.error_code
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
