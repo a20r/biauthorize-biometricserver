@@ -17,15 +17,14 @@ Biometrics Authorization Server
     }
 
 #### Returns:
-On success:
-    '''
+##### On success:
     {
         response_code: <int: 200>,
         similarity_metric: <float: f in [0, 1]>,
         hist_similarity: <float: f in [0, 1]>
     }
-    '''
-On failure:
+
+##### On failure:
     {
         response_code: <int: 500>
     }
