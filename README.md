@@ -1,6 +1,12 @@
-biauthorize
+biauthorize-biometricserver
 ===========
 Biometrics Authorization Server
+
+## Overview
+Independent server that does biometric storage and analysis. Uses
+a RESTful API to communicate with the main project. The use of an
+independent server enables biauthorize to distribute the computational
+bottleneck to make it more scalable for future use.
 
 ## RESTful API
 
