@@ -1,7 +1,6 @@
 biauthorize
 ===========
-
-## Biometrics Authorization Server
+Biometrics Authorization Server
 
 ## RESTful API
 
