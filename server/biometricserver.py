@@ -3,6 +3,7 @@ import pybr
 import cv2
 import sys
 import config
+import base64
 from flask import Flask, request, redirect, url_for, abort, jsonify
 
 """
@@ -40,62 +41,99 @@ def checkSimilarity(imagePath1, imagePath2):
     return cv2.compareHist(hist1, hist2, cv2.cv.CV_COMP_CORREL)
 
 @app.route('/check/<int:userId>', methods = ['POST'])
-def postCheck(userId):
+def postCheck64(userId):
     """
-    Used to check if the sent image matches the image
-    saved for the userId
 
-    Returns: {
-        response_code: <int (On error: 500, On success: 200)>,
-        similarity_metric: <float (Total match: 1, Total mismatch: 0)>
+    Checks if an image passed to the server biometrically matches
+    with the image stored as the userId.
+
+    Parameters:
+        userId: <int: id of user>
+
+    Form data:
+    {
+        image: <Base 64 Image>
     }
+
+    Returns:
+        On Success: {
+            response_code: <int: 200>,
+            similarity_metric: <float: f in [0, 1]>,
+            hist_similarity: <float: f in [0, 1]>
+        }
+
+        On Failure: {
+            response_code: <int: 500>
+        }
+
     """
     try:
-        sentImage = request.files[config.imageFieldName]
-        tempPath = os.path.join(
-            config.tempDir,
-            str(userId) + config.imageExtension
-        )
-
-        sentImage.save(tempPath)
-
         storedPath = os.path.join(
             config.referenceDir,
             str(userId) + config.imageExtension
         )
 
+        if not os.path.exists(storedPath):
+            raise Exception()
+
+        image64 = request.form[config.imageFieldName]
+        image = base64.b64decode(image64)
+        tempPath = os.path.join(
+            config.tempDir,
+            str(userId) + config.imageExtension
+        )
+        tempImage = open(
+            tempPath, 'wb'
+        )
+        tempImage.write(image)
+        tempImage.close()
+
         histogramSimilarity = checkSimilarity(tempPath, storedPath)
 
         similarity = pybr.faceRecognition(tempPath, storedPath)
+        print similarity
         return jsonify(
             response_code = config.okCode,
             similarity_metric = similarity,
             hist_similarity = histogramSimilarity
-        )
-
-    except KeyError:
+        ), config.okCode
+    except:
         return jsonify(
             response_code = config.errorCode
-        )
+        ), config.errorCode
+
 
 @app.route('/reference/<int:userId>', methods = ['POST'])
-def postReference(userId):
+def postReference64(userId):
     """
-    Used for initial storage of the reference image
 
-    Returns: On success: 200, On failure: 500
+    Creates a new reference image of somebody using biauthorize
+
+    Parameters:
+        userId: <int: id of user>
+
+    Form data:
+    {
+        image: <Base 64 Image>
+    }
+
+    Returns:
+        On Success: 200
+        On Error: 500
 
     """
     try:
-        image = request.files[config.imageFieldName]
-        print image
-        image.save(
+        image64 = request.form[config.imageFieldName]
+        image = base64.b64decode(image64)
+        imageFile = open(
             os.path.join(
                 config.referenceDir,
                 str(userId) + config.imageExtension
-            )
+            ), 'wb'
         )
 
+        imageFile.write(decodedImage)
+        imageFile.close()
         return jsonify(
             response_code = config.okCode
         )
@@ -106,25 +144,30 @@ def postReference(userId):
 
 @app.route('/test/', methods = ['POST'])
 def test():
+    import traceback
     import base64
-    try:
-        image = request.form[cnofig.imageFieldName]
-        decodedImage = base64.decode(image)
-        imageFile = open(
-            os.path.join(
-                config.referenceDir,
-                str("TEST") + config.imageExtension
-            ), 'wb'
-        )
+    image = request.form[config.imageFieldName]
+    decodedImage = base64.b64decode(image)
+    imageFile = open(
+        os.path.join(
+            config.referenceDir,
+            str("TEST") + config.imageExtension
+        ), 'wb'
+    )
 
-        imageFile.write(decodedImage)
-    except:
-        pass
-
-    print "Image:", image
+    imageFile.write(decodedImage)
+    imageFile.close()
+    return jsonify(
+        response_code = config.okCode
+    )
+    #print "Image:", image
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         app.run()
     else:
-        app.run(host = sys.argv[1], port = int(sys.argv[2]), debug = True)
+        app.run(
+            host = sys.argv[1],
+            port = int(sys.argv[2]),
+            debug = True
+        )
