@@ -53,8 +53,8 @@ the reference image of the user id.
 ##### On Success:
     {
         response_code: <int: 200>,
-        similarity_metric: <float: f in [0, 1]>,
-        hist_similarity: <float: f in [0, 1]>
+        similarity_metric: <float: f between [0, 1]>,
+        hist_similarity: <float: f between [0, 1]>
     }
 
 ##### On Failure:
