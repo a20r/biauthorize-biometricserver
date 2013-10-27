@@ -105,6 +105,7 @@ def postCheck64(userId):
 
 @app.route('/reference/<int:userId>', methods = ['POST'])
 def postReference64(userId):
+    import traceback
     """
 
     Creates a new reference image of somebody using biauthorize
@@ -124,7 +125,7 @@ def postReference64(userId):
     """
     try:
         image64 = request.form[config.imageFieldName]
-        image = base64.b64decode(image64)
+        decodedImage = base64.b64decode(image64)
         imageFile = open(
             os.path.join(
                 config.referenceDir,
@@ -136,11 +137,11 @@ def postReference64(userId):
         imageFile.close()
         return jsonify(
             response_code = config.okCode
-        )
+        ), config.okCode
     except:
         return jsonify(
             response_code = config.errorCode
-        )
+        ), config.errorCode
 
 @app.route('/test/', methods = ['POST'])
 def test():
