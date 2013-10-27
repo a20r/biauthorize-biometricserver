@@ -5,6 +5,10 @@ import sys
 import config
 from flask import Flask, request, redirect, url_for, abort, jsonify
 
+"""
+Biometrics server for image authentication
+"""
+
 app = Flask(__name__)
 
 def getHist(img):
