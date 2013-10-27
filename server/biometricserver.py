@@ -3,7 +3,7 @@ import pybr
 import cv2
 import sys
 import config
-from flask import Flask, request, redirect, url_for, abort
+from flask import Flask, request, redirect, url_for, abort, jsonify
 
 app = Flask(__name__)
 
@@ -29,8 +29,6 @@ def checkSimilarity(imagePath1, imagePath2):
     """
     image1 = cv2.imread(imagePath1)
     image2 = cv2.imread(imagePath2)
-
-    print image1
 
     hist1 = getHist(image1)
     hist2 = getHist(image2)
@@ -65,14 +63,14 @@ def postCheck(userId):
         histogramSimilarity = checkSimilarity(tempPath, storedPath)
 
         similarity = pybr.faceRecognition(tempPath, storedPath)
-        return flask.jsonify(
+        return jsonify(
             response_code = config.okCode,
             similarity_metric = similarity,
             hist_similarity = histogramSimilarity
         )
 
     except KeyError:
-        return flask.jsonify(
+        return jsonify(
             response_code = config.errorCode
         )
 
@@ -94,17 +92,31 @@ def postReference(userId):
             )
         )
 
-        return flask.jsonify(
+        return jsonify(
             response_code = config.okCode
         )
     except:
-        return flase.jsonify(
-            config.errorCode
+        return jsonify(
+            response_code = config.errorCode
         )
 
 @app.route('/test/', methods = ['POST'])
 def test():
-    image = request.files[config.imageFieldName]
+    import base64
+    try:
+        image = request.form[cnofig.imageFieldName]
+        decodedImage = base64.decode(image)
+        imageFile = open(
+            os.path.join(
+                config.referenceDir,
+                str("TEST") + config.imageExtension
+            ), 'wb'
+        )
+
+        imageFile.write(decodedImage)
+    except:
+        pass
+
     print "Image:", image
 
 if __name__ == "__main__":
