@@ -68,6 +68,9 @@ def postCheck64(userId):
 
     """
     try:
+        if not os.path.exists(config.tempDir):
+            os.mkdir(config.tempDir)
+
         storedPath = os.path.join(
             config.referenceDir,
             str(userId) + config.imageExtension
@@ -91,7 +94,8 @@ def postCheck64(userId):
         histogramSimilarity = checkSimilarity(tempPath, storedPath)
 
         similarity = pybr.faceRecognition(tempPath, storedPath)
-        print similarity
+        print "Similarity:", similarity
+        print "Hist Similarity:", histogramSimilarity
         return jsonify(
             response_code = config.okCode,
             similarity_metric = similarity,
@@ -124,6 +128,9 @@ def postReference64(userId):
 
     """
     try:
+        if not os.path.exists(config.referenceDir):
+            os.mkdir(config.referenceDir)
+
         image64 = request.form[config.imageFieldName]
         decodedImage = base64.b64decode(image64)
         imageFile = open(
@@ -143,29 +150,9 @@ def postReference64(userId):
             response_code = config.errorCode
         ), config.errorCode
 
-@app.route('/test/', methods = ['POST'])
-def test():
-    import traceback
-    import base64
-    image = request.form[config.imageFieldName]
-    decodedImage = base64.b64decode(image)
-    imageFile = open(
-        os.path.join(
-            config.referenceDir,
-            str("TEST") + config.imageExtension
-        ), 'wb'
-    )
-
-    imageFile.write(decodedImage)
-    imageFile.close()
-    return jsonify(
-        response_code = config.okCode
-    )
-    #print "Image:", image
-
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        app.run()
+        app.run(debug = True)
     else:
         app.run(
             host = sys.argv[1],
