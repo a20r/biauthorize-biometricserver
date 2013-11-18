@@ -75,3 +75,7 @@ the reference image of the user id.
     reference/
         <userId>.jpg
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/wallarelvo/biauthorize-biometricserver/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
